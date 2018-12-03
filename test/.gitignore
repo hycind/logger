@@ -1,0 +1,9 @@
+# Ignore everything
+*
+# except this file
+!.gitignore
+# and the test fles
+!*.test.ts 
+!./**/*.test.ts 
+# and mocha options
+!mocha.opts 

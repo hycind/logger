@@ -1,0 +1,86 @@
+{
+    "name": "logger",
+    "version": "0.0.1",
+    "description": "Wrapper for winston loggin",
+    "main": "dist/index",
+    "typings": "dist/index",
+    "scripts": {
+        "build": "$(npm bin)/webpack",
+        "lint": "$(npm bin)/tslint src/**/*.ts",
+        "start": "npx ts-node src/index.ts",
+        "test": "$(npm bin)/nyc $(npm bin)/mocha"
+    },
+    "author": "Hycind Santhibhavan",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/hycind/logger/issues"
+    },
+    "homepage": "https://github.com/hycind/logger#readme",
+    "private": true,
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/hycind/logger.git"
+    },
+    "nyc": {
+        "require": [
+            "ts-node/register"
+        ],
+        "sourceMap": true,
+        "instrument": true,
+        "extension": [
+            ".ts"
+        ],
+        "include": [
+            "src/**/*.ts"
+        ],
+        "exclude": [
+            "src/**/*.test.ts"
+        ],
+        "reporter": [
+            "text-summary",
+            "text",
+            "html"
+        ],
+        "report-dir": "test/coverage",
+        "temp-dir": "test/.nyc_output",
+        "check-coverage": true,
+        "statements": 95,
+        "functions": 95,
+        "branches": 95,
+        "lines": 95
+    },
+    "dependencies": {
+        "express": "^4.16.4",
+        "morgan": "^1.9.1",
+        "winston": "^3.1.0",
+        "winston-daily-rotate-file": "^3.5.1"
+    },
+    "devDependencies": {
+        "@types/chai": "^4.1.7",
+        "@types/chai-http": "^3.0.5",
+        "@types/debug": "0.0.31",
+        "@types/express": "^4.16.0",
+        "@types/istanbul": "^0.4.30",
+        "@types/mocha": "^5.2.5",
+        "@types/morgan": "^1.7.35",
+        "@types/sinon": "^5.0.7",
+        "chai": "^4.2.0",
+        "chai-http": "^4.2.0",
+        "circular-dependency-plugin": "^5.0.2",
+        "istanbul": "^0.4.5",
+        "mocha": "^5.2.0",
+        "mochawesome": "^3.1.1",
+        "mock-express-request": "^0.2.2",
+        "mock-express-response": "^0.2.2",
+        "node-mocks-http": "^1.7.3",
+        "nyc": "^13.1.0",
+        "sinon": "^7.1.1",
+        "source-map-support": "^0.5.9",
+        "ts-loader": "^5.3.0",
+        "ts-node": "^7.0.1",
+        "tslint": "^5.11.0",
+        "typescript": "^3.1.6",
+        "webpack": "^4.25.1",
+        "webpack-cli": "^3.1.2"
+    }
+}
