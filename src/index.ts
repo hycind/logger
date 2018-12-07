@@ -32,35 +32,41 @@ export default class AppLogger {
         if (appName === 'DEF') console.debug(`AppLogger/constructor() No app name set, using defaults`);
 
         this.logApplication = appName;
-        this.logLevel = ['debug', 'info', 'warn', 'error'].indexOf(process.env['ACE_' + appName + '_LOG_LEVEL'] || '') >= 0 ? <string>process.env['ACE_' + appName + '_LOG_LEVEL'] : 'silly';
-        this.LogToConsole = process.env['ACE_' + appName + '_LOG_CONSOLE'] === 'true' ? true : false;
-        this.logToFile = process.env['ACE_' + appName + '_LOG_FILE'] === 'true' ? true : false;
-        this.logFilePath = process.env['ACE_' + appName + '_LOG_FILE_PATH'] || './logs';
-        this.logHttp = process.env['ACE_' + appName + '_LOG_HTTP'] === 'true' ? true : false;
-        this.logMaxSize = process.env['ACE_' + appName + '_LOG_MAX_SIZE'] || '5m';
-        this.logMaxFiles = process.env['ACE_' + appName + '_LOG_MAX_FILES'] || '14d';
+        this.logLevel = ['debug', 'info', 'warn', 'error'].indexOf(process.env[appName + '_LOG_LEVEL'] || '') >= 0 ? <string>process.env[appName + '_LOG_LEVEL'] : 'silly';
+        this.LogToConsole = process.env[appName + '_LOG_CONSOLE'] === 'true' ? true : false;
+        this.logToFile = process.env[appName + '_LOG_FILE'] === 'true' ? true : false;
+        this.logFilePath = process.env[appName + '_LOG_FILE_PATH'] || './logs';
+        this.logHttp = process.env[appName + '_LOG_HTTP'] === 'true' ? true : false;
+        this.logMaxSize = process.env[appName + '_LOG_MAX_SIZE'] || '5m';
+        this.logMaxFiles = process.env[appName + '_LOG_MAX_FILES'] || '14d';
 
-        fs.existsSync(this.logFilePath) ? {} : fs.mkdirSync(this.logFilePath);
+        this.setLogFileLocation();
+
         this.$logger = winston.createLogger({
             level: this.logLevel,
-            format: winston.format.json()
+
+            transports: [
+                new winston.transports.Console({
+                    format: winston.format.simple(),
+                    silent: this.LogToConsole
+                })
+            ],
+            format: winston.format.json(),
+            silent: !this.logToFile && !this.LogToConsole ? true : false
         });
-        this.setTransports();
+        this.setFileTransports();
         if (this.logHttp) this.setHttpLogging();
     }
 
     // 
-    private setTransports() {
+    private setLogFileLocation() {
+        let logPath = path.resolve(process.cwd(), this.logFilePath)
+        if (!fs.existsSync(logPath)) fs.mkdirSync(logPath);
+    }
+
+    // 
+    private setFileTransports() {
         // console.log('AppLogger/setTransports()')
-        // 
-        // Console transports
-        // 
-        if (this.LogToConsole) this.$logger.add(new winston.transports.Console({
-            format: winston.format.simple()
-        }));
-        // 
-        // File transports
-        // 
         if (this.logToFile) this.$logger.add(new ((winston.transports as any).DailyRotateFile)({
             filename: path.resolve(this.logFilePath, `${this.logApplication.toLowerCase()}_%DATE%_${this.logLevel}.log`),
             datePattern: 'YYYY-MM-DD HH:mm',
@@ -69,7 +75,6 @@ export default class AppLogger {
             maxFiles: this.logMaxFiles,
             level: this.logLevel
         }));
-
     }
 
     // 

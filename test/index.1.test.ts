@@ -1,7 +1,15 @@
 // This is ugly, but is required for Logger
 (global as any).APP = 'WBR';
 // 
-process.env.ACE_WBR_LOG_LEVEL = 'error'
+process.env.WBR_LOG_LEVEL = "silly"
+process.env.WBR_LOG_CONSOLE = "false"
+process.env.WBR_LOG_FILE = "false"
+process.env.WBR_LOG_HTTP = "true"
+process.env.WBR_LOG_FILE_PATH = "./logs"
+process.env.WBR_LOG_MAX_SIZE = "5m"
+process.env.WBR_LOG_MAX_FILES = "14d"
+
+import fs from 'fs';
 import chai from 'chai';
 import express from 'express';
 import sinon from 'sinon';
@@ -11,37 +19,6 @@ import { Logger } from '../src';
 let expect = chai.expect;
 let should = chai.should();
 
-// var req = (options = {}) => ({
-//     body: {},
-//     cookies: {},
-//     query: {},
-//     params: {},
-//     get: stub(),
-//     ...options
-// });
-// var res = (options = {}) => {
-//     const res: any = {
-//         cookie: spy(),
-//         clearCookie: spy(),
-//         download: spy(),
-//         format: spy(),
-//         json: spy(),
-//         jsonp: spy(),
-//         send: spy(),
-//         sendFile: spy(),
-//         sendStatus: spy(),
-//         redirect: spy(),
-//         render: spy(),
-//         end: spy(),
-//         set: spy(),
-//         type: spy(),
-//         get: stub(),
-//         ...options
-//     }
-//     res.status = stub().returns(res)
-//     res.vary = stub().returns(res)
-//     return res;
-// }
 var req = new (require('mock-express-request'))({
     method: 'PUT',
     url: '/stuff?q=thing',
@@ -55,6 +32,17 @@ var res = new (require('mock-express-response'))({
     request: new (require('mock-express-response'))()
 });
 
+describe('Logger file location and created files', () => {
+    // before(() => {
+    //     fs.rmdirSync(process.env.WBR_LOG_FILE_PATH || './logs');
+    // });
+    // after(() => {
+    //     fs.rmdirSync(process.env.WBR_LOG_FILE_PATH || './logs');
+    // });
+    it('Should not create a log when LogToFile is set to false', () => {
+
+    });
+});
 describe('Logger wrapper', () => {
     it('Should create a log', () => {
         Logger.silly('A silly message');

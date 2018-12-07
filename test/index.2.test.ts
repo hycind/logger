@@ -1,6 +1,14 @@
 // This is ugly, but is required for Logger
-(global as any).APP = 'WBR'
-process.env.ACE_WBR_LOG_LEVEL = 'error'
+(global as any).APP = 'WBR';
+// 
+process.env.WBR_LOG_LEVEL="silly"
+process.env.WBR_LOG_CONSOLE="false"
+process.env.WBR_LOG_FILE="false"
+process.env.WBR_LOG_HTTP="true"
+process.env.WBR_LOG_FILE_PATH="./logs"
+process.env.WBR_LOG_MAX_SIZE="5m"
+process.env.WBR_LOG_MAX_FILES="14d"
+
 import chai from 'chai';
 import path from 'path';
 import express from 'express';
@@ -55,7 +63,5 @@ describe('HTTPLogger reload import', () => {
         });
     });
     it('should pick default value', () => {
-        let newmw = HttpLogger;
-        console.log('initia')
     });
 }); 
